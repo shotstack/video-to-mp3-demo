@@ -1,0 +1,119 @@
+.content .jumbotron {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    margin-bottom: 0;
+}
+.display-4 {
+    font-size: 2.5rem;
+}
+
+.video-container {
+    padding-bottom: 16px;
+}
+
+video {
+    margin-bottom: 0 !important;
+}
+
+#player,
+#json {
+    display: none;
+}
+
+#status .fas {
+    margin-bottom: 8px;
+}
+
+#status small {
+    margin-top: 10px;
+    color: #777777;
+}
+
+.progress {
+    height: 2px;
+    margin-bottom: 14px;
+}
+
+#json {
+    margin-top: 16px;
+}
+
+#json .card {
+    background-color: #fafafa;
+    border-radius: 10px;
+}
+
+#json pre {
+  margin: 0;
+}
+
+.json-key {
+    color: brown;
+}
+.json-value {
+    color: navy;
+}
+.json-string {
+    color: olive;
+}
+
+header {
+    margin-bottom: 2rem;
+}
+
+.video-btn-group .btn.active {
+    background-color: #25d3d0 !important;
+    border-color: #25d3d0 !important;
+}
+
+a {
+    color: #25d3d0;
+}
+a:hover {
+    color: #25d3d0;
+}
+
+.video-container .jumbotron {
+    background-color: transparent;
+}
+
+#instructions,
+#status,
+.plyr {
+    margin-top: 3rem;
+}
+
+#instructions p {
+    margin: 0;
+}
+
+input[name='video-url'],
+#video-url,
+.file-placeholder {
+    display: none;
+}
+
+.toggle-button-container {
+    height: 100px;
+}
+
+.info {
+    cursor: pointer;
+}
+
+label {
+    font-weight: 600;
+}
+
+#file-delta-summary table {
+    width: 100%;
+}
+td.value {
+    text-align: right;
+}
+
+.alert-info {
+    color: #212529;
+    background-color: #eceff2;
+    border-color: #dfe3e8;
+}

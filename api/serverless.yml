@@ -1,0 +1,63 @@
+service: demo-video-mp3-shotstack
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  stage: demo
+  region: ap-southeast-2
+  logRetentionInDays: 30
+  deploymentBucket:
+    name: shotstack-serverless-deploys-${self:provider.region}
+    blockPublicAccess: true
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:PutObject
+      Resource: arn:aws:s3:::${env:AWS_S3_UPLOADS_BUCKET}/*
+  environment:
+    SHOTSTACK_API_KEY: ${env:SHOTSTACK_API_KEY}
+    SHOTSTACK_HOST: ${env:SHOTSTACK_HOST}
+    AWS_S3_UPLOADS_BUCKET: ${env:AWS_S3_UPLOADS_BUCKET}
+
+package:
+  exclude:
+    - .env
+    - .env.dist
+    - package.json
+    - package-lock.json
+    - src/app.js
+    - node_modules/aws-sdk/**
+    - node_modules/**/aws-sdk/**
+
+functions:
+  shotstack:
+    handler: src/handler/shotstack/handler.submit
+    description: Demo - Convert video to mp3
+    timeout: 15
+    memorySize: 128
+    events:
+      - http:
+          path: shotstack
+          method: post
+          cors: true
+  status:
+    handler: src/handler/shotstack/handler.status
+    description: Demo - Convert video to mp3 status check
+    timeout: 10
+    memorySize: 128
+    events:
+      - http:
+          path: shotstack/{id}
+          method: get
+          cors: true
+  upload:
+    handler: src/handler/upload/handler.getPresignedPostData
+    description: Demo - Get presigned url for asset upload
+    timeout: 15
+    memorySize: 128
+    events:
+      - http:
+          path: upload/sign
+          method: post
+          cors: true
