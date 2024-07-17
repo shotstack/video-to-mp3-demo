@@ -2,12 +2,12 @@ const S3 = require('aws-sdk/clients/s3');
 
 const s3 = new S3();
 const awsBucket = process.env.AWS_S3_UPLOADS_BUCKET;
-const MIN_FILE_SIZE = 10;
-const MAX_FILE_SIZE = 2500000000;
+const MIN_FILE_SIZE = 1024;
+const MAX_FILE_SIZE = 25 * 1024 * 1024;
 
 /**
  * Use AWS SDK to create pre-signed POST data.
- * We also put a file size limit (1kB - 250MB).
+ * We also put a file size limit (1kB - 25MB).
  * @param key
  * @param contentType
  * @returns {Promise<object>}
