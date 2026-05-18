@@ -34,9 +34,9 @@ const status = (id) => {
         })
         .then((response) => {
             return resolve(response.data.data.attributes);
-        }), (error) => {
+        }, (error) => {
             return reject(error);
-        }
+        });
     })
 }
 
