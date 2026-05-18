@@ -507,9 +507,26 @@ $(document).ready(function () {
         });
     });
 
+    /** Warn as soon as a YouTube/streaming URL is typed (the backend rejects these too) */
+    var BLOCKED_URL_HOSTS = ['youtube.com', 'youtu.be', 'm.youtube.com', 'music.youtube.com'];
+
+    function isBlockedVideoUrl(value) {
+        var host;
+        try {
+            host = new URL(value).hostname.toLowerCase().replace(/^www\./, '');
+        } catch (e) {
+            return false;
+        }
+        return BLOCKED_URL_HOSTS.some(function (h) {
+            return host === h || host.endsWith('.' + h);
+        });
+    }
+
     /** Video URL field change event */
-    $('#video-url').blur(function () {
-        var videoUrl = $(this).val();
+    $('#video-url').on('input blur', function () {
+        var blocked = isBlockedVideoUrl($(this).val());
+        $('#youtube-notice').toggleClass('d-none', !blocked);
+        $('#submit-video').prop('disabled', blocked);
     });
 
     /** Form submit event */
