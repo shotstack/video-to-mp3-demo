@@ -5,15 +5,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="robots" content="noindex">
 
-        <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;600&family=Kanit:wght@600&display=swap"
-        />
-        <link
-            rel="stylesheet"
-            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-            crossorigin="anonymous"
-        />
+        <!-- Bootstrap, Popper, jQuery and fonts are already provided by the
+             Shotstack site layout. Only declare assets unique to this demo
+             (FontAwesome icons + Plyr player) to avoid duplicate downloads. -->
         <link
             rel="stylesheet"
             href="https://use.fontawesome.com/releases/v5.1.0/css/solid.css"
@@ -202,6 +196,19 @@
                                     Show Transformation JSON
                                 </a>
                             </p>
+                            <div class="alert alert-info text-center mt-3" role="alert">
+                                <strong>Need to do this for hundreds of files?</strong>
+                                Automate audio extraction with the Shotstack API.
+                                <a
+                                    class="btn btn-primary btn-sm ml-2"
+                                    href="https://dashboard.shotstack.io/register"
+                                    target="_blank"
+                                    rel="noopener"
+                                    role="button"
+                                >
+                                    Get a free API key
+                                </a>
+                            </div>
                             <div class="collapse" id="jsonExpand">
                                 <div class="card card-body">
                                     <pre><code class="json-container"></code></pre>
@@ -212,15 +219,9 @@
                 </div>
             </div>
         </div>
-        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-        <script
-            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
-            integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-            crossorigin="anonymous"
-        ></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <!-- jQuery, Popper and Bootstrap JS come from the Shotstack site
+             layout; only Plyr (player) and the demo app are unique here. -->
         <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.5.4/umd/popper.min.js"></script>
         <script src="app.js"></script>
     </body>
 </html>

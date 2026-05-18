@@ -3,8 +3,8 @@ var apiEndpoint = apiUrl + 'shotstack';
 var urlEndpoint = apiUrl + 'upload/sign';
 var s3Bucket = 'https://shotstack-demo-storage.s3-ap-southeast-2.amazonaws.com/';
 var progress = 0;
-var progressIncrement = 10;
-var pollIntervalSeconds = 10;
+var pollIntervalSeconds = 5;
+var maxPollSeconds = 360; // stop after 6 min instead of polling forever
 var unknownError = 'An error has occurred, please try again later.';
 var player;
 
@@ -41,26 +41,46 @@ function initialiseAudio(src) {
  *
  * @param {String} id  the job id
  */
-function pollAudioStatus(id) {
+function pollAudioStatus(id, startedAt) {
+    startedAt = startedAt || Date.now();
+
+    if ((Date.now() - startedAt) / 1000 > maxPollSeconds) {
+        updateStatus('failed');
+        displayError(
+            'This is taking longer than expected. The file may be too large, or the source URL may be unreachable or not a direct media file. Try a smaller file or a direct video link (e.g. .mp4).'
+        );
+        resetForm();
+        return;
+    }
+
     $.get(apiEndpoint + '/' + id, function (response) {
         var rendition = response.data.outputs.renditions[0];
         var status = rendition.status;
 
         updateStatus(status);
 
-        if (!(status === 'ready' || status === 'failed')) {
-            setTimeout(function () {
-                pollAudioStatus(id);
-            }, pollIntervalSeconds * 1000);
-        } else if (status === 'failed') {
-            updateStatus(status);
-        } else {
+        if (status === 'failed') {
+            displayError(
+                'Conversion failed. Please check the source is a valid, directly accessible video file.'
+            );
+            resetForm();
+        } else if (status === 'ready') {
             initialiseAudio(rendition.url);
             initialiseJson(rendition.transformation);
             initialiseDownload(rendition.url);
 
             resetForm();
+        } else {
+            setTimeout(function () {
+                pollAudioStatus(id, startedAt);
+            }, pollIntervalSeconds * 1000);
         }
+    }).fail(function () {
+        // Transient status error: retry until the overall timeout instead of
+        // silently dying (the old code had no .fail handler at all).
+        setTimeout(function () {
+            pollAudioStatus(id, startedAt);
+        }, pollIntervalSeconds * 1000);
     });
 }
 
@@ -73,22 +93,24 @@ function updateStatus(status) {
     $('#status').removeClass('d-none');
     $('#instructions').addClass('d-none');
 
-    if (progress <= 90) {
-        progress += progressIncrement;
-    }
-
+    // Progress reflects the real pipeline stage, not a fake timer that
+    // froze at 90% forever (the old behaviour that made jobs look hung).
     if (status === 'submitted') {
         $('#status .fas').attr('class', 'fas fa-spinner fa-spin fa-2x');
         $('#status p').text('SUBMITTED');
+        progress = 10;
     } else if (status === 'queued') {
         $('#status .fas').attr('class', 'fas fa-history fa-2x');
         $('#status p').text('QUEUED');
+        progress = 25;
     } else if (status === 'waiting') {
         $('#status .fas').attr('class', 'fas fa-cloud-download-alt fa-2x');
         $('#status p').text('IMPORTING FILE');
+        progress = 45;
     } else if (status === 'processing') {
         $('#status .fas').attr('class', 'fas fa-server fa-2x');
         $('#status p').text('PROCESSING');
+        progress = 75;
     } else if (status === 'ready') {
         $('#status .fas').attr('class', 'fas fa-check-circle fa-2x');
         $('#status p').text('READY');
